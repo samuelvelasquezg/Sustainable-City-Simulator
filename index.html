@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sustainable City Simulator - This simulator uses simplified logical relationships to show how urban decisions can affect sustainability. It is an educational model, not an exact prediction of a real city.</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- =============================================
+       HEADER
+  ============================================= -->
+  <header class="site-header">
+    <div class="header-inner">
+
+      <!-- City SVG icon — inline, no external assets -->
+      <div class="header-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4"  y="28" width="8"  height="16" rx="1" fill="currentColor" opacity="0.7"/>
+          <rect x="14" y="20" width="10" height="24" rx="1" fill="currentColor"/>
+          <rect x="26" y="24" width="8"  height="20" rx="1" fill="currentColor" opacity="0.8"/>
+          <rect x="36" y="18" width="8"  height="26" rx="1" fill="currentColor" opacity="0.65"/>
+          <path d="M22 10 C22 10 30 6 34 14 C30 16 24 14 22 10Z" fill="var(--accent-green)" opacity="0.9"/>
+          <line x1="22" y1="10" x2="26" y2="18" stroke="var(--accent-green)" stroke-width="1.5"/>
+        </svg>
+      </div>
+
+      <div class="header-text">
+        <h1>Sustainable City Simulator</h1>
+        <p class="subtitle">
+          How can technology help us model the relationship between urban decisions and environmental sustainability?
+        </p>
+      </div>
+
+      <div class="ib-badge">IB Group 4 Project - Technology & Sustainability (Samuel Velásquez, Jacobo Montoya, Jeronimo Prado and Matías Ramirez) </div>
+    </div>
+  </header>
+
+
+  <!-- =============================================
+       MAIN LAYOUT — two-column grid
+  ============================================= -->
+  <main class="main-grid">
+
+    <!-- ==========================================
+         LEFT COLUMN — Sliders / Controls
+    ========================================== -->
+    <section class="panel controls-panel" aria-label="City policy controls">
+
+      <div class="panel-header">
+        <h2>City Policies</h2>
+      </div>
+      <p class="panel-desc">
+        Adjust each policy level from 0 (none) to 100 (maximum). Outcomes update in real time.
+      </p>
+
+      <!-- Public Transport -->
+      <div class="slider-group">
+        <div class="slider-label-row">
+          <label for="transport">Public Transport</label>
+          <span class="slider-value" id="val-transport">50</span>
+        </div>
+        <input type="range" id="transport" class="slider" min="0" max="100" value="50" step="1" />
+        <p class="slider-hint">Higher investment reduces car dependency and direct emissions.</p>
+      </div>
+
+      <!-- Green Zones -->
+      <div class="slider-group">
+        <div class="slider-label-row">
+          <label for="green">Green Zones</label>
+          <span class="slider-value" id="val-green">50</span>
+        </div>
+        <input type="range" id="green" class="slider" min="0" max="100" value="50" step="1" />
+        <p class="slider-hint">Parks and forests absorb CO2 and improve citizen wellbeing.</p>
+      </div>
+
+      <!-- Renewable Energy -->
+      <div class="slider-group">
+        <div class="slider-label-row">
+          <label for="energy">Renewable Energy</label>
+          <span class="slider-value" id="val-energy">50</span>
+        </div>
+        <input type="range" id="energy" class="slider" min="0" max="100" value="50" step="1" />
+        <p class="slider-hint">Solar and wind reduce fossil fuel use. Infrastructure has an upfront cost.</p>
+      </div>
+
+      <!-- Recycling -->
+      <div class="slider-group">
+        <div class="slider-label-row">
+          <label for="recycling">Recycling</label>
+          <span class="slider-value" id="val-recycling">50</span>
+        </div>
+        <input type="range" id="recycling" class="slider" min="0" max="100" value="50" step="1" />
+        <p class="slider-hint">Effective waste management reduces landfill pollution over time.</p>
+      </div>
+
+      <!-- Private Cars -->
+      <div class="slider-group">
+        <div class="slider-label-row">
+          <label for="cars">Private Cars</label>
+          <span class="slider-value slider-value--danger" id="val-cars">50</span>
+        </div>
+        <input type="range" id="cars" class="slider slider--danger" min="0" max="100" value="50" step="1" />
+        <p class="slider-hint">High car use drives pollution, congestion, and social cost.</p>
+      </div>
+
+      <!-- Reset -->
+      <button class="reset-btn" onclick="resetSimulation()">
+        Reset to Defaults
+      </button>
+
+    </section>
+
+
+    <!-- ==========================================
+         RIGHT COLUMN
+    ========================================== -->
+    <div class="right-col">
+
+      <!-- Outcome Metrics -->
+      <section class="panel results-panel" aria-label="City outcome metrics">
+        <div class="panel-header">
+          <h2>City Outcomes</h2>
+        </div>
+        <p class="panel-desc">All four indicators are calculated from the policy weights above.</p>
+
+        <div class="metrics-grid">
+
+          <!-- Pollution -->
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-label">Pollution</span>
+              <span class="metric-badge metric-badge--danger" id="badge-pollution">Moderate</span>
+            </div>
+            <div class="metric-score" id="score-pollution">50</div>
+            <div class="metric-bar-bg">
+              <div class="metric-bar metric-bar--danger" id="bar-pollution"></div>
+            </div>
+            <div class="metric-footnote">Lower is better</div>
+          </div>
+
+          <!-- Quality of Life -->
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-label">Quality of Life</span>
+              <span class="metric-badge metric-badge--success" id="badge-qol">Moderate</span>
+            </div>
+            <div class="metric-score" id="score-qol">50</div>
+            <div class="metric-bar-bg">
+              <div class="metric-bar metric-bar--success" id="bar-qol"></div>
+            </div>
+            <div class="metric-footnote">Higher is better</div>
+          </div>
+
+          <!-- Economic Cost -->
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-label">Economic Cost</span>
+              <span class="metric-badge metric-badge--warning" id="badge-cost">Moderate</span>
+            </div>
+            <div class="metric-score" id="score-cost">50</div>
+            <div class="metric-bar-bg">
+              <div class="metric-bar metric-bar--warning" id="bar-cost"></div>
+            </div>
+            <div class="metric-footnote">Lower is better</div>
+          </div>
+
+          <!-- Overall Sustainability -->
+          <div class="metric-card metric-card--featured">
+            <div class="metric-header">
+              <span class="metric-label">Overall Sustainability</span>
+              <span class="metric-badge metric-badge--info" id="badge-sustainability">Moderate</span>
+            </div>
+            <div class="metric-score metric-score--featured" id="score-sustainability">50</div>
+            <div class="metric-bar-bg">
+              <div class="metric-bar metric-bar--info" id="bar-sustainability"></div>
+            </div>
+            <div class="metric-footnote">Higher is better</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- City Canvas Visual -->
+      <section class="panel city-visual-panel" aria-label="City environment visualisation">
+        <canvas id="cityCanvas"></canvas>
+      </section>
+
+      <!-- Bottom two-panel row -->
+      <div class="bottom-grid">
+
+        <!-- How It Works -->
+        <section class="panel how-panel" aria-label="Simulation methodology">
+          <div class="panel-header">
+            <h2>How It Works</h2>
+          </div>
+          <p class="how-text">
+            This simulator uses weighted logical relationships between urban policy decisions and their environmental, social, and economic effects. It does not claim scientific precision — it is designed to make the direction and scale of these relationships visible and discussable.
+          </p>
+          <table class="how-table">
+            <thead>
+              <tr>
+                <th>Policy</th>
+                <th>Main Effect</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Public Transport</td><td>Reduces pollution and improves sustainability</td></tr>
+              <tr><td>Green Zones</td><td>Improves quality of life and absorbs CO2</td></tr>
+              <tr><td>Renewable Energy</td><td>Cuts emissions; moderate infrastructure cost</td></tr>
+              <tr><td>Recycling</td><td>Supports sustainability; small operational cost</td></tr>
+              <tr><td>Private Cars</td><td>Raises pollution, cost and reduces sustainability</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- City Diagnosis -->
+        <section class="panel conclusion-panel" aria-label="Automatic city diagnosis">
+          <div class="panel-header">
+            <h2>City Diagnosis</h2>
+          </div>
+          <div class="conclusion-body" id="conclusion-text">
+            Adjust the sliders to generate an automatic diagnosis of your city.
+          </div>
+          <div class="city-rating">
+            <span class="rating-label">City Rating</span>
+            <span class="rating-stars" id="rating-stars">&#9733;&#9733;&#9733;&#9734;&#9734;</span>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+
+  <!-- =============================================
+       FOOTER
+  ============================================= -->
+  <footer class="site-footer">
+    <p>Sustainable City Simulator &mdash; IB Extended Exhibition &mdash; Technology &amp; Sustainability</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
